@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -6,11 +7,14 @@ client.on('ready', () => {
 });
 
 client.on('message', async (msg) => {
-	if (msg.content.startsWith('!hello')) {
-		msg.reply('world');
+	if (msg.author.bot) {
+		return;
 	}
 
-	//Sending message from the bot
+	if (msg.content.startsWith('!hello')) {
+		msg.reply('world!');
+	}
+
 	if (msg.content.startsWith('!dm')) {
 		let messageContent = msg.content.replace('!dm', '');
 		msg.member.send(messageContent);
@@ -20,16 +24,16 @@ client.on('message', async (msg) => {
 		const args = msg.content.split(' ');
 		let messageContent = '';
 		if (args.includes('foo')) {
-			messageContent += 'bar';
+			messageContent += 'bar ';
 		}
 		if (args.includes('bar')) {
-			messageContent += 'baz';
+			messageContent += 'baz ';
 		}
 		if (args.includes('baz')) {
-			messageContent += 'foo';
+			messageContent += 'foo ';
 		}
 		msg.reply(messageContent);
 	}
 });
 
-client.login('');
+client.login(process.env.DISCORD_BOT_TOKEN);
