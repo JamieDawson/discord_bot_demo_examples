@@ -1,4 +1,6 @@
 require('dotenv').config();
+const axios = require('axios');
+
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -11,15 +13,33 @@ client.on('message', async (msg) => {
 		return;
 	}
 
+	//if someone types !hello. Run this serverless function and return the values.
 	if (msg.content.startsWith('!hello')) {
-		msg.reply('world!');
+		// msg.reply('world!');
+		axios
+			.get(
+				'https://apigcp.nimbella.io/api/v1/web/jamierob-hzoysjqazdd/default/hello.json'
+			)
+			.then(function (response) {
+				// handle success
+				const value = response.data.body;
+				//console.log(response.data.body);
+				msg.reply(value);
+			})
+			.catch(function (error) {
+				// handle error
+				console.log(error);
+				msg.reply('screwed up');
+			});
 	}
 
+	//If someone says !dm [message]. Email them the message.
 	if (msg.content.startsWith('!dm')) {
 		let messageContent = msg.content.replace('!dm', '');
 		msg.member.send(messageContent);
 	}
 
+	//!args [arguments]. Creates string from replaced arguements.
 	if (msg.content.startsWith('!args')) {
 		const args = msg.content.split(' ');
 		let messageContent = '';
